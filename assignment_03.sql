@@ -312,6 +312,80 @@ JOIN customers c
 ON rc.customer_id = c.customer_id
 WHERE rank_no <= 10;
 
+
+-- ====================================================
+-- WINDOW FUNCTION
+-- Top 3 Customers Based on Total Sales
+-- ====================================================
+
+WITH customer_sales AS
+(
+    SELECT
+        customer_id,
+        SUM(sales) AS total_sales
+    FROM orders
+    GROUP BY customer_id
+),
+
+ranked_customers AS
+(
+    SELECT
+        customer_id,
+        total_sales,
+        RANK() OVER
+        (
+            ORDER BY total_sales DESC
+        ) AS customer_rank
+    FROM customer_sales
+)
+
+SELECT *
+FROM ranked_customers
+WHERE customer_rank <= 3;
+
+-- ====================================================
+-- Bottom 5 Customers Based on Total Sales
+-- ====================================================
+
+WITH customer_sales AS
+(
+    SELECT
+        customer_id,
+        SUM(sales) AS total_sales
+    FROM orders
+    GROUP BY customer_id
+)
+
+SELECT
+    c.customer_name,
+    cs.total_sales
+FROM customer_sales cs
+JOIN customers c
+    ON cs.customer_id = c.customer_id
+ORDER BY total_sales ASC
+LIMIT 5;
+
+-- ====================================================
+-- Rank All Customers Based on Total Sales
+-- ====================================================
+
+WITH customer_sales AS
+(
+    SELECT
+        customer_id,
+        SUM(sales) AS total_sales
+    FROM orders
+    GROUP BY customer_id
+)
+
+SELECT
+    customer_id,
+    total_sales,
+    RANK() OVER
+    (
+        ORDER BY total_sales DESC
+    ) AS customer_rank
+FROM customer_sales;
 -- ====================================================
 -- END OF ASSIGNMENT
 -- ====================================================
