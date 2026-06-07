@@ -151,6 +151,9 @@ Ranked customers based on total sales and displayed the top performers.
 6. Customer ranking helps identify high-value customers for targeted business strategies.
 
 ---
+assignment_03 -> contains all the queries
+data-> Sample_superstore.csv
+Screenshots
 
 ## Technologies Used
 
